@@ -1,2 +1,1 @@
-# lilysbot
-my discord bot :3
+# rocket legue
