@@ -76,56 +76,8 @@ export default new Event({
 
 		else if (interaction.isMessageContextMenuCommand()) { }
 
-		// if interaction is from a message (ie buttons, select menu, etc)
-		else {
-			const id = interaction.customId.split(".")
-			const command = client.commands.get(id[0])
-			console.log(command)
-			if (interaction.isStringSelectMenu()) {
-				// const command = interaction.client.commands.get(interaction.message.interaction.commandName)
-				// if (command) {
-				// 	console.log(command)
-				// 	try {
-				// 		await command.menu(interaction)
-
-				// 	} catch (error) {
-				// 		console.error(error)
-				// 		interaction.reply({ embeds: embeds.errorEmbed(`Running menu interaction **${interaction.customId}** for **${interaction.commandName}**`, error), ephemeral: true })
-				// 	}
-				if (command != null) {
-					command.menu(interaction)
-				} else {
-					console.log(`interaction ${interaction.customId} not command idk`)
-				}
-			}
-
-			else if (interaction.isButton()) {
-				// if () {
-				// 	commandName = interaction.message.interaction.commandName.split(" ")[0]
-				// 	const command = interaction.client.commands.get(commandName)
-				// 	console.log(command)
-				// 	try {
-				// 		await command.button(interaction)
-				// 	} catch (error) {
-				// 		console.error(error)
-				// 		interaction.reply({ embeds: embeds.errorEmbed(`Running button interaction **${interaction.customId}** for **${commandName}**`, error), ephemeral: true })
-				// 	}
-				// } else 
 
 
-				// handle non command buttons (eg on error)
-				if (interaction.customId === "errorreport") {
-
-				} else {
-					if (command != null) {
-						command.button(interaction)
-					} else {
-						console.log(`interaction ${interaction.customId} not command idk`)
-					}
-				}
-				//todo: handle role menus 
-			}
-		}
 	}
 }
 )

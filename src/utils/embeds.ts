@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, EmbedBuilder, ColorResolvable, APIEmbedField, EmbedFooterOptions, APIEmbed, User } from "discord.js"
-import { footer } from "../config.json"
 
 function embed(
 	color: ColorResolvable,

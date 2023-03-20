@@ -1,6 +1,6 @@
 import * as redis from 'redis';
 import { client } from ".."
-const key = "lilybot"
+const key = "mafia"
 let db
 
 async function connect() {
@@ -51,7 +51,7 @@ async function set(path: string, data: any) {
 				console.log("error root")
 				newpath = path.split(".")
 				newpath.pop()
-				await this.set("." + newpath, {})
+				await set("." + newpath, {})
 				break
 			}
 			case 'null': { // if it failed to set the value, fix it idk

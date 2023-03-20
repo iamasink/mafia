@@ -33,7 +33,6 @@ import embeds from "./embeds"
 import database from "./database"
 import config from "../config.json"
 import { setTimeout } from "node:timers"
-import { Octokit } from "@octokit/rest";
 
 function merge(a: any, b: any, prop: any) {
 	const reduced = a.filter(
@@ -428,12 +427,6 @@ export default {
 								channel.send(content)
 								return
 							})
-
-							// create an github issue from the error report
-							const octokit = new Octokit({
-								auth: config.github.token
-							})
-							octokit.issues.create({ owner: "iamasink", repo: "lilysbot", title: `Error report from command "${interaction.commandName}" - ${usermessage}`, body: content, labels: ["report"] })
 						})
 						.catch(err => console.log(err))
 				} else {
