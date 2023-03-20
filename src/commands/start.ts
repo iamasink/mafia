@@ -75,7 +75,7 @@ export default new ApplicationCommand({
 			}
 			switch (i.customId) {
 				case "2v2": {
-					playerCount = 2
+					playerCount = 1
 					break
 				}
 				case "3v3": {
@@ -116,7 +116,7 @@ export default new ApplicationCommand({
 						.setCustomId('start')
 						.setLabel('Start')
 						.setEmoji("<:brookertr:971504369675673610>")
-						.setStyle(ButtonStyle.Danger)
+						.setStyle(ButtonStyle.Success)
 						.setDisabled(true)
 				)
 
@@ -132,8 +132,7 @@ export default new ApplicationCommand({
 
 						const newrow = row
 
-						if (joined.length == playerCount) {
-							newrow.components[1].setDisabled(false)
+						if (joined.length >= playerCount) {
 							i.reply({ embeds: embeds.warningEmbed('no more players may join uwu!'), ephemeral: true })
 						} else {
 							if (joined.includes(i.user.id)) {
@@ -143,6 +142,10 @@ export default new ApplicationCommand({
 								console.log(joined)
 								i.reply({ embeds: embeds.warningEmbed(`Joined the game`), ephemeral: true })
 							}
+						}
+
+						if (joined.length >= playerCount) {
+							newrow.components[2].setDisabled(false)
 						}
 
 						let string = (await Promise.all(joined.map(id => guild.members.fetch(id)))).join("\n")
@@ -163,6 +166,10 @@ export default new ApplicationCommand({
 							i.reply({ embeds: embeds.warningEmbed(`You weren't in the game, braindead`), ephemeral: true })
 						}
 
+						if (joined.length < playerCount) {
+							newrow.components[2].setDisabled(true)
+						}
+
 						let string = (await Promise.all(joined.map(id => guild.members.fetch(id)))).join("\n")
 						console.log(string)
 						msg2.edit({ embeds: embeds.messageEmbed("Game Created!", `**Joined**:\n${string || "No players have joined"}`), components: [newrow] })
@@ -173,7 +180,9 @@ export default new ApplicationCommand({
 						// if so it can start
 						// if not it can't
 						// (you could just do it so the start button enables when there's enough people)
-						// 
+
+
+
 						// pick one random person from the list to message telling them they're sus
 						// message the others they are not sus
 						// split the players into random teams
