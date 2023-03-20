@@ -10,16 +10,6 @@ import database from "../utils/database"
 export default new Event({
 	name: Events.GuildMemberUpdate,
 	async execute(member: GuildMember) {
-		console.log(member)
-		let info = ``
-		if (member.pending) {
-			info = `\nthey are pending.`
-		} else {
-			info = `\nthey aren't pending.`
 
-		}
-		log.log(member.guild, `${member.id} has been updated.` + info)
-
-	},
-}
-)
+	}
+})

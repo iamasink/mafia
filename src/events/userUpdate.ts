@@ -7,15 +7,6 @@ import database from "../utils/database"
 export default new Event({
 	name: Events.UserUpdate,
 	async execute(olduser: User, newuser: User) {
-		console.log("a user was updated!")
-		console.log(olduser.tag)
-		console.log(newuser.tag)
-
-		if (olduser.tag !== newuser.tag) {
-			database.set(`.users.${newuser.id}.usernames.${Date.now()}`, { from: olduser.tag, to: newuser.tag })
-		} else {
-			console.log("not saving usernames cuz theyre the same lol")
-		}
 
 	},
 }

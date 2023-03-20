@@ -7,10 +7,5 @@ import database from "../utils/database"
 export default new Event({
 	name: Events.InviteDelete,
 	async execute(invite: Invite) {
-		console.log(`a invite was deleted: ${invite}`)
-		console.log(invite)
-		database.set(`.guilds.${invite.guild.id}.invites.${invite.code}.expired`, true)
-
-	},
-}
-)
+	}
+})
