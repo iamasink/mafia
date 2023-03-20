@@ -51,7 +51,7 @@ export default {
 		title: string,
 		description?: string,
 		fields?: any,
-		color: ColorResolvable = "#f9beca",
+		color: ColorResolvable = "#7b7b7b",
 	): any {
 		return embed(color, title, description, fields)
 	},
