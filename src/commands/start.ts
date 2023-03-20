@@ -48,19 +48,20 @@ export default new ApplicationCommand({
 			)
 
 
-		let msg1 = await interaction.reply({ embeds: embeds.messageEmbed("Choose a ghfyntmvbjcg <:redamonguspng:857630212644929556>"), fetchReply: true, components: [row1] })
+		let msg = await interaction.reply({ embeds: embeds.messageEmbed("Choose a ghfyntmvbjcg <:redamonguspng:857630212644929556>"), fetchReply: true, components: [row1] })
 		let playerCount: number = 0
-		const collector1 = msg1.createMessageComponentCollector({ time: 180 * 1000 })
+		const collector1 = msg.createMessageComponentCollector({ time: 180 * 1000 })
 		// will run on every time a reaction is collected
 		collector1.on("collect", async i => {
 			if (i.user.id !== interaction.user.id) {
 				i.reply({ embeds: embeds.warningEmbed(`not for you to pick you dumb shit, ask ${(interaction.member as GuildMember).displayName} to choose. twat.`), ephemeral: true })
 				return
 			}
-			msg1.delete()
+			i.deferUpdate()
+			collector1.stop()
 			switch (i.customId) {
 				case "2v2": {
-					playerCount = 1
+					playerCount = 4
 					break
 				}
 				case "3v3": {
@@ -112,10 +113,9 @@ export default new ApplicationCommand({
 						.setDisabled(true)
 				)
 
-			let msg2 = await i.reply({ embeds: embeds.messageEmbed("Game Created!", "Join by clicking the button"), fetchReply: true, components: [row] })
+			await msg.edit({ embeds: embeds.messageEmbed("Game Created!", "Join by clicking the button"), components: [row] })
 			let joined: any[] = []
-
-			const collector = msg2.createMessageComponentCollector({ time: 180 * 1000 })
+			const collector = msg.createMessageComponentCollector({ time: 5 * 60 * 1000 })
 			// will run on every time a reaction is collected
 			collector.on("collect", async i => {
 				const option = i.customId
@@ -124,8 +124,11 @@ export default new ApplicationCommand({
 					case 'join': {
 
 						const newrow = row
+						if (playerCount == -1) {
+							newrow.components[2].setDisabled(false)
+						}
 
-						if (joined.length >= playerCount) {
+						if (playerCount != -1 && joined.length >= playerCount) {
 							i.reply({ embeds: embeds.warningEmbed('no more players may join uwu!'), ephemeral: true })
 						} else {
 							if (joined.includes(i.user.id)) {
@@ -133,17 +136,20 @@ export default new ApplicationCommand({
 							} else {
 								joined.push(i.user.id)
 								console.log(joined)
-								i.reply({ embeds: embeds.warningEmbed(`Joined the game`), ephemeral: true })
+								//i.reply({ embeds: embeds.warningEmbed(`Joined the game`), ephemeral: true })
+								i.deferUpdate()
 							}
 						}
 
-						if (joined.length >= playerCount) {
-							newrow.components[2].setDisabled(false)
+						if (playerCount != -1) {
+							if (joined.length >= playerCount) {
+								newrow.components[2].setDisabled(false)
+							}
 						}
 
 						let string = (await Promise.all(joined.map(id => guild.members.fetch(id)))).join("\n")
 						console.log(string)
-						msg2.edit({ embeds: embeds.messageEmbed("Game Created!", `**Joined**:\n${string}`), components: [newrow] })
+						msg.edit({ embeds: embeds.messageEmbed("Game Created!", `**Joined**:\n${string}`), components: [newrow] })
 
 						break
 					}
@@ -154,23 +160,26 @@ export default new ApplicationCommand({
 						if (index != -1) {
 							joined.splice(index, 1)
 							console.log(joined)
-							i.reply({ embeds: embeds.warningEmbed(`Left the game`), ephemeral: true })
+							//i.reply({ embeds: embeds.warningEmbed(`Left the game`), ephemeral: true })
+							i.deferUpdate()
 						} else {
 							i.reply({ embeds: embeds.warningEmbed(`You weren't in the game, braindead`), ephemeral: true })
 						}
 
-						if (joined.length < playerCount) {
-							newrow.components[2].setDisabled(true)
+						if (playerCount != -1) {
+							if (joined.length < playerCount) {
+								newrow.components[2].setDisabled(true)
+							}
 						}
 
 						let string = (await Promise.all(joined.map(id => guild.members.fetch(id)))).join("\n")
 						console.log(string)
-						msg2.edit({ embeds: embeds.messageEmbed("Game Created!", `**Joined**:\n${string || "No players have joined"}`), components: [newrow] })
+						msg.edit({ embeds: embeds.messageEmbed("Game Created!", `**Joined**:\n${string || "No players have joined"}`), components: [newrow] })
 						break
 					}
 					case 'start': {
 						if (i.user.id !== interaction.user.id) {
-							i.reply({ embeds: embeds.warningEmbed(`Ask ${(interaction.member as GuildMember).displayName} to start`), ephemeral: true })
+							i.reply({ embeds: embeds.warningEmbed(`Not for you! Ask ${(interaction.member as GuildMember).displayName} to start`), ephemeral: true })
 							return
 						}
 						// checks if there is the right amount of people in the game
@@ -186,10 +195,45 @@ export default new ApplicationCommand({
 									.setStyle(ButtonStyle.Primary),
 							)
 
-						if (joined.length < playerCount) {
-							interaction.reply("There aren't enough people!")
-						} else if (joined.length > playerCount) {
-							interaction.reply("Theres too many people!")
+						if (playerCount != -1) {
+							if (joined.length < playerCount) {
+								interaction.reply("There aren't enough people!")
+							} else if (joined.length > playerCount) {
+								interaction.reply("Theres too many people!")
+							}
+						}
+
+						let players = joined
+
+						// Shuffle the array randomly
+						const shuffledPlayers = players.sort(() => Math.random() - 0.5)
+
+						// Partition the shuffled array into two equal halves
+						const half = Math.ceil(shuffledPlayers.length / 2)
+						const team1 = shuffledPlayers.splice(0, half)
+						const team2 = shuffledPlayers.splice(-half + 1)
+						const mole1 = team1[Math.floor(Math.random() * team1.length)]
+						const mole2 = team2[Math.floor(Math.random() * team2.length)]
+
+						console.log(players)
+						console.log(team1)
+						console.log(team2)
+						console.log(mole1)
+						console.log(mole2)
+
+
+						for (let i = 0, len = players.length; i < len; i++) {
+							console.log(players[i])
+							const player = await guild.members.fetch(players[i])
+							console.log(player.user.username)
+							let team: string
+							if (team1.includes(players[i])) {
+								team = "Team 1"
+							} else {
+								team = "Team 2"
+							}
+
+							player.send("hi" + team)
 						}
 
 
